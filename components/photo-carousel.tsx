@@ -79,11 +79,17 @@ export function CarouselDots({ count }: { count: number }) {
 }
 
 export const heroPhotos: Photo[] = [
-  { src: "/logopianissima.jpg", alt: "Logo Pianíssima com monograma musical" },
+  { src: "/espaco-apresentacao.jpeg", alt: "Apresentação musical ao ar livre na Pianíssima" },
+  { src: "/banda-pianissima.jpeg", alt: "Alunos reunidos com instrumentos no espaço da Pianíssima" },
+  { src: "/aluna-piano.jpeg", alt: "Aluna tocando piano no espaço da Pianíssima" },
 ]
 
 export const spacePhotos: Photo[] = [
-  { src: "/logopianissima.jpg", alt: "Pianíssima Aqui Tem Música" },
+  { src: "/espaco-apresentacao.jpeg", alt: "Apresentação musical ao ar livre na Pianíssima" },
+  { src: "/alunos-palco.jpeg", alt: "Grupo de alunos reunido no palco da Pianíssima" },
+  { src: "/dupla-violao.jpeg", alt: "Dois músicos tocando violão no espaço da Pianíssima" },
+  { src: "/banda-pianissima.jpeg", alt: "Alunos reunidos com instrumentos no espaço da Pianíssima" },
+  { src: "/aluna-piano.jpeg", alt: "Aluna tocando piano no espaço da Pianíssima" },
 ]
 
 export function GalleryCarousel() {
