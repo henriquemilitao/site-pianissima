@@ -79,7 +79,7 @@ export function CarouselDots({ count }: { count: number }) {
 }
 
 const heroPhoto: Photo = {
-  src: "/espaco-apresentacao.jpeg",
+  src: "/banda-pianissima.jpeg",
   alt: "Apresentação musical ao ar livre na Pianíssima",
 }
 
