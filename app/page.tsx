@@ -9,7 +9,7 @@ import {
   Sparkles,
   Waves,
 } from 'lucide-react'
-import { GalleryCarousel, HeroCarousel } from '@/components/photo-carousel'
+import { GalleryCarousel, HeroPhoto } from '@/components/photo-carousel'
 
 const logoUrl = '/logopianissima.jpg'
 const whatsappUrl = 'https://wa.me/5567981047995?text=Ol%C3%A1%2C%20gostaria%20de%20saber%20mais%20sobre%20as%20aulas%20da%20Pian%C3%ADssima.'
@@ -60,7 +60,7 @@ export default function Page() {
           <div className="absolute h-[310px] w-[310px] rounded-full border border-[#d8cbb8] sm:h-[440px] sm:w-[440px]" />
           <div className="absolute h-[250px] w-[250px] rounded-full border border-[#e5dbce] sm:h-[355px] sm:w-[355px]" />
           <div className="absolute -right-4 top-8 h-24 w-24 rounded-full bg-[#b8863e]/10 blur-2xl sm:right-8" />
-          <HeroCarousel />
+          <HeroPhoto />
           <div className="absolute bottom-5 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-[#292827] px-5 py-3 text-xs font-medium tracking-[0.12em] text-[#f8f4ed] shadow-xl sm:bottom-8"><span className="mr-2 text-[#d7a95e]">●</span> Comece a tocar</div>
         </div>
       </section>
@@ -77,7 +77,7 @@ export default function Page() {
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">{instruments.map(({ title, text, icon: Icon }, index) => <article key={title} className="group relative min-h-[250px] overflow-hidden rounded-[1.5rem] border border-[#ded3c5] bg-[#faf7f2] p-6 transition-all hover:-translate-y-1 hover:border-[#b8863e]/60"><span className="absolute right-5 top-5 font-serif text-4xl text-[#e6dacb]">0{index + 1}</span><div className="mb-16 flex h-11 w-11 items-center justify-center rounded-full bg-[#eee3d4] text-[#b8863e] transition-colors group-hover:bg-[#b8863e] group-hover:text-white"><Icon className="h-5 w-5" /></div><h3 className="font-serif text-2xl text-[#292827]">{title}</h3><p className="mt-2 text-sm leading-relaxed text-[#7b7268]">{text}</p></article>)}</div>
       </section>
 
-      <section className="bg-[#292827] px-5 py-20 text-[#f8f4ed] sm:px-8 lg:px-12 lg:py-28"><div className="mx-auto max-w-7xl"><div className="grid gap-14 lg:grid-cols-[0.8fr_1.2fr] lg:gap-24"><div><p className="mb-5 text-xs font-semibold uppercase tracking-[0.25em] text-[#d7a95e]">Por que a Pianíssima</p><h2 className="max-w-md font-serif text-4xl leading-tight tracking-[-0.03em] sm:text-5xl">Aprender também pode ser um <em className="font-normal text-[#d7a95e]">acolhimento.</em></h2></div><div className="grid gap-9 sm:grid-cols-3">{benefits.map((benefit) => <div key={benefit.number} className="border-t border-white/20 pt-4"><span className="text-xs tracking-[0.2em] text-[#d7a95e]">{benefit.number}</span><h3 className="mt-9 font-serif text-2xl">{benefit.title}</h3><p className="mt-3 text-sm leading-relaxed text-[#bdb5ab]">{benefit.text}</p></div>)}</div></div></div></section>
+      <section className="bg-[#292827] px-5 py-20 text-[#f8f4ed] sm:px-8 lg:px-12 lg:py-28"><div className="mx-auto max-w-7xl"><div className="grid gap-14 lg:grid-cols-[0.8fr_1.2fr] lg:gap-24"><div><p className="mb-5 text-xs font-semibold uppercase tracking-[0.25em] text-[#d7a95e]">Por que a Pian��ssima</p><h2 className="max-w-md font-serif text-4xl leading-tight tracking-[-0.03em] sm:text-5xl">Aprender também pode ser um <em className="font-normal text-[#d7a95e]">acolhimento.</em></h2></div><div className="grid gap-9 sm:grid-cols-3">{benefits.map((benefit) => <div key={benefit.number} className="border-t border-white/20 pt-4"><span className="text-xs tracking-[0.2em] text-[#d7a95e]">{benefit.number}</span><h3 className="mt-9 font-serif text-2xl">{benefit.title}</h3><p className="mt-3 text-sm leading-relaxed text-[#bdb5ab]">{benefit.text}</p></div>)}</div></div></div></section>
 
       <section id="espaco" className="border-y border-[#e3dacf] bg-[#efe9df] px-5 py-20 sm:px-8 lg:px-12 lg:py-28">
         <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.75fr_1.25fr] lg:items-center lg:gap-24">
