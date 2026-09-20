@@ -35,32 +35,32 @@ export function PhotoCarousel({ photos, variant }: PhotoCarouselProps) {
   if (!photos.length) return null
 
   if (!hasMultiplePhotos) {
-    return (
-      <div className={variant === "hero" ? "relative rotate-3 rounded-[2rem] border border-white/70 bg-[#ebe3d7] p-4 shadow-[0_25px_70px_rgba(80,55,25,0.12)] sm:p-6" : "overflow-hidden rounded-[1.5rem] border border-[#ded3c5] bg-[#ebe3d7] p-3"}>
-        <Image
-          src={photos[0].src}
-          alt={photos[0].alt}
-          width={variant === "hero" ? 310 : 900}
-          height={variant === "hero" ? 310 : 620}
-          className={variant === "hero" ? "h-56 w-56 rounded-[1.4rem] object-contain sm:h-[310px] sm:w-[310px]" : "h-[22rem] w-full rounded-[1.1rem] object-cover sm:h-[30rem]"}
-          priority={variant === "hero"}
-        />
-      </div>
-    )
-  }
+  return (
+    <div className={variant === "hero" ? "relative overflow-hidden rounded-full shadow-[0_25px_70px_rgba(80,55,25,0.12)]" : "overflow-hidden rounded-[1.5rem] border border-[#ded3c5]"}>
+    <Image
+      src={photos[0].src}
+      alt={photos[0].alt}
+      width={variant === "hero" ? 440 : 900}
+      height={variant === "hero" ? 440 : 620}
+      className={variant === "hero" ? "h-56 w-56 object-cover sm:h-[440px] sm:w-[440px]" : "h-[22rem] w-full object-cover sm:h-[30rem]"}
+      priority={variant === "hero"}
+    />
+  </div>
+  )
+}
 
   return (
     <Carousel setApi={setApi} opts={{ loop: true }} className={variant === "hero" ? "w-fit max-w-full" : "w-full"}>
       <CarouselContent>
         {photos.map((photo) => (
           <CarouselItem key={photo.src}>
-            <div className={variant === "hero" ? "relative rotate-3 rounded-[2rem] border border-white/70 bg-[#ebe3d7] p-4 shadow-[0_25px_70px_rgba(80,55,25,0.12)] sm:p-6" : "overflow-hidden rounded-[1.5rem] border border-[#ded3c5] bg-[#ebe3d7] p-3"}>
+            <div className={variant === "hero" ? "relative overflow-hidden rounded-full shadow-[0_25px_70px_rgba(80,55,25,0.12)]" : "overflow-hidden rounded-[1.5rem] border border-[#ded3c5]"}>
               <Image
                 src={photo.src}
                 alt={photo.alt}
-                width={variant === "hero" ? 310 : 900}
-                height={variant === "hero" ? 310 : 620}
-                className={variant === "hero" ? "h-56 w-56 rounded-[1.4rem] object-contain sm:h-[310px] sm:w-[310px]" : "h-[22rem] w-full rounded-[1.1rem] object-cover sm:h-[30rem]"}
+                width={variant === "hero" ? 440 : 900}
+                height={variant === "hero" ? 440 : 620}
+                className={variant === "hero" ? "h-56 w-56 object-cover sm:h-[440px] sm:w-[440px]" : "h-[22rem] w-full object-cover sm:h-[30rem]"}
                 priority={variant === "hero"}
               />
             </div>
@@ -78,10 +78,11 @@ export function CarouselDots({ count }: { count: number }) {
   return <p className="mt-4 text-center text-xs uppercase tracking-[0.2em] text-[#8f877d]">Arraste para explorar · {count} fotos</p>
 }
 
-const heroPhoto: Photo = {
-  src: "/banda-pianissima.jpeg",
-  alt: "Apresentação musical ao ar livre na Pianíssima",
-}
+export const heroPhotos: Photo[] = [
+  { src: "/espaco-apresentacao.jpeg", alt: "Apresentação musical ao ar livre na Pianíssima" },
+  { src: "/alunos-palco.jpeg", alt: "Alunos reunidos em uma apresentação na Pianíssima" },
+  { src: "/aluna-piano.jpeg", alt: "Aluna tocando piano durante uma aula na Pianíssima" },
+]
 
 export const spacePhotos: Photo[] = [
   { src: "/espaco-apresentacao.jpeg", alt: "Apresentação musical ao ar livre na Pianíssima" },
@@ -100,19 +101,6 @@ export function GalleryCarousel() {
   )
 }
 
-export function HeroPhoto() {
-  return (
-    <div className="relative rotate-3 rounded-[2rem] border border-white/70 bg-[#ebe3d7] p-4 shadow-[0_25px_70px_rgba(80,55,25,0.12)] sm:p-6">
-      <Image
-        src={heroPhoto.src}
-        alt={heroPhoto.alt}
-        width={720}
-        height={540}
-        priority
-        className="aspect-[4/3] w-[min(78vw,440px)] rounded-[1.4rem] object-cover"
-      />
-    </div>
-  )
-}
+
 
 export type { CarouselApi }

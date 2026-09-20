@@ -1,30 +1,26 @@
 import Image from 'next/image'
 import {
   ArrowUpRight,
-  Drum,
   MapPin,
   MessageCircle,
-  Music2,
-  Piano,
-  Sparkles,
   Waves,
 } from 'lucide-react'
-import { GalleryCarousel, HeroPhoto } from '@/components/photo-carousel'
+import { GalleryCarousel, PhotoCarousel, heroPhotos } from '@/components/photo-carousel'
+import { VideoShowcase } from '@/components/video-showcase'
 
 const logoUrl = '/logopianissima.jpg'
 const whatsappUrl = 'https://wa.me/5567981047995?text=Ol%C3%A1%2C%20gostaria%20de%20saber%20mais%20sobre%20as%20aulas%20da%20Pian%C3%ADssima.'
 
 const instruments = [
-  { title: 'Aulas de piano', text: 'Técnica, repertório e expressão para descobrir o seu som.', icon: Piano },
-  { title: 'Aulas de violão', text: 'Aprenda a acompanhar suas músicas favoritas com leveza.', icon: Music2 },
-  { title: 'Aulas de bateria', text: 'Ritmo, coordenação e energia em uma experiência prática.', icon: Drum },
-  { title: 'Aulas particulares', text: 'Para iniciantes e adultos, com um caminho feito para você.', icon: Sparkles },
+  { title: 'Piano', text: 'Técnica, repertório e expressão.' },
+  { title: 'Violão', text: 'Acompanhamento e repertório.' },
+  { title: 'Bateria', text: 'Ritmo, coordenação e energia.' },
 ]
 
 const benefits = [
-  { number: '01', title: 'No seu ritmo', text: 'Aulas individuais e um plano que respeita o seu momento.' },
-  { number: '02', title: 'Olhar dedicado', text: 'Professor dedicado a cada instrumento e à sua evolução.' },
-  { number: '03', title: 'Ambiente acolhedor', text: 'Um espaço confortável para começar, recomeçar e continuar.' },
+  { title: 'No seu ritmo', text: 'Aulas individuais e um plano que respeita o seu momento.' },
+  { title: 'Olhar dedicado', text: 'Acompanhamento atento para cada instrumento e evolução.' },
+  { title: 'Espaço para evoluir', text: 'Um lugar confortável para começar, recomeçar e continuar.' },
 ]
 
 export default function Page() {
@@ -60,7 +56,9 @@ export default function Page() {
           <div className="absolute h-[310px] w-[310px] rounded-full border border-[#d8cbb8] sm:h-[440px] sm:w-[440px]" />
           <div className="absolute h-[250px] w-[250px] rounded-full border border-[#e5dbce] sm:h-[355px] sm:w-[355px]" />
           <div className="absolute -right-4 top-8 h-24 w-24 rounded-full bg-[#b8863e]/10 blur-2xl sm:right-8" />
-          <HeroPhoto />
+          <div className="w-full max-w-[440px]">
+            <PhotoCarousel photos={heroPhotos} variant="hero" />
+          </div>
           <div className="absolute bottom-5 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-[#292827] px-5 py-3 text-xs font-medium tracking-[0.12em] text-[#f8f4ed] shadow-xl sm:bottom-8"><span className="mr-2 text-[#d7a95e]">●</span> Comece a tocar</div>
         </div>
       </section>
@@ -68,20 +66,25 @@ export default function Page() {
       <section id="sobre" className="border-y border-[#e3dacf] bg-[#efe9df] px-5 py-20 sm:px-8 lg:px-12 lg:py-28">
         <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.75fr_1.25fr] lg:gap-24">
           <div><p className="mb-5 text-xs font-semibold uppercase tracking-[0.25em] text-[#b8863e]">Sobre a Pianíssima</p><h2 className="max-w-sm font-serif text-4xl leading-tight tracking-[-0.03em] sm:text-5xl">Um lugar para <em className="font-normal text-[#b8863e]">ouvir</em> a sua música.</h2></div>
-          <div className="max-w-2xl"><p className="text-xl leading-relaxed text-[#514b44]">Na Pianíssima, cada aluno encontra espaço para aprender com calma, curiosidade e acompanhamento de perto.</p><p className="mt-6 leading-relaxed text-[#7b7268]">Seja o seu primeiro contato com um instrumento ou a vontade de voltar a tocar, as aulas são construídas para fazer sentido na sua rotina e celebrar cada pequena conquista.</p></div>
+          <div className="max-w-2xl"><p className="text-xl leading-relaxed text-[#514b44]">Na Pianíssima, cada aluno encontra espaço para aprender com calma, curiosidade e acompanhamento de perto.</p><p className="mt-6 leading-relaxed text-[#7b7268]">Seja o seu primeiro contato com um instrumento ou a vontade de voltar a tocar, as aulas são construídas para fazer sentido na sua rotina e valorizar cada pequena conquista.</p></div>
         </div>
       </section>
 
       <section id="aulas" className="mx-auto max-w-7xl px-5 py-20 sm:px-8 lg:px-12 lg:py-28">
-        <div className="mb-12 flex flex-col justify-between gap-5 sm:flex-row sm:items-end"><div><p className="mb-4 text-xs font-semibold uppercase tracking-[0.25em] text-[#b8863e]">O que você pode aprender</p><h2 className="font-serif text-4xl tracking-[-0.03em] sm:text-5xl">Escolha o seu <em className="font-normal text-[#b8863e]">som.</em></h2></div><p className="max-w-xs text-sm leading-relaxed text-[#7b7268]">Aulas particulares para iniciantes e adultos, sempre com atenção individual.</p></div>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">{instruments.map(({ title, text, icon: Icon }, index) => <article key={title} className="group relative min-h-[250px] overflow-hidden rounded-[1.5rem] border border-[#ded3c5] bg-[#faf7f2] p-6 transition-all hover:-translate-y-1 hover:border-[#b8863e]/60"><span className="absolute right-5 top-5 font-serif text-4xl text-[#e6dacb]">0{index + 1}</span><div className="mb-16 flex h-11 w-11 items-center justify-center rounded-full bg-[#eee3d4] text-[#b8863e] transition-colors group-hover:bg-[#b8863e] group-hover:text-white"><Icon className="h-5 w-5" /></div><h3 className="font-serif text-2xl text-[#292827]">{title}</h3><p className="mt-2 text-sm leading-relaxed text-[#7b7268]">{text}</p></article>)}</div>
+        <div className="mb-12 flex flex-col justify-between gap-5 sm:flex-row sm:items-end"><div><p className="mb-4 text-xs font-semibold uppercase tracking-[0.25em] text-[#b8863e]">O que você pode aprender</p><h2 className="font-serif text-4xl tracking-[-0.03em] sm:text-5xl">Escolha o seu <em className="font-normal text-[#b8863e]">som.</em></h2></div><p className="max-w-xs text-sm leading-relaxed text-[#7b7268]">Para quem está começando ou quer voltar a tocar, em qualquer idade.</p></div>
+        <div className="grid gap-12 lg:grid-cols-[1fr_1.25fr] lg:gap-20">
+          <div><p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#8f877d]">Instrumentos ensinados</p><ul className="mt-5 divide-y divide-[#ded3c5] border-y border-[#ded3c5]">{instruments.map(({ title, text }) => <li key={title} className="flex items-center justify-between py-5"><span className="font-serif text-2xl">{title}</span><span className="text-right text-sm text-[#7b7268]">{text}</span></li>)}</ul></div>
+          <div className="rounded-[1.5rem] border border-[#ded3c5] bg-[#faf7f2] p-7 sm:p-9"><p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#b8863e]">Como funciona</p><h3 className="mt-5 font-serif text-3xl">Aulas individuais, semanais.</h3><p className="mt-3 leading-relaxed text-[#7b7268]">Presenciais ou online, com o mesmo valor e acompanhamento de perto.</p><div className="mt-8 border-t border-[#ded3c5] pt-6"><p className="text-sm text-[#7b7268]">Mensalidade das aulas semanais</p><p className="mt-1 font-serif text-5xl text-[#b8863e]">R$270<span className="font-sans text-base text-[#7b7268]">/mês</span></p><p className="mt-2 text-sm text-[#7b7268]">R$250 pagando até o vencimento · quinzenal: R$135/mês</p></div></div>
+        </div>
       </section>
 
-      <section className="bg-[#292827] px-5 py-20 text-[#f8f4ed] sm:px-8 lg:px-12 lg:py-28"><div className="mx-auto max-w-7xl"><div className="grid gap-14 lg:grid-cols-[0.8fr_1.2fr] lg:gap-24"><div><p className="mb-5 text-xs font-semibold uppercase tracking-[0.25em] text-[#d7a95e]">Por que a Pian��ssima</p><h2 className="max-w-md font-serif text-4xl leading-tight tracking-[-0.03em] sm:text-5xl">Aprender também pode ser um <em className="font-normal text-[#d7a95e]">acolhimento.</em></h2></div><div className="grid gap-9 sm:grid-cols-3">{benefits.map((benefit) => <div key={benefit.number} className="border-t border-white/20 pt-4"><span className="text-xs tracking-[0.2em] text-[#d7a95e]">{benefit.number}</span><h3 className="mt-9 font-serif text-2xl">{benefit.title}</h3><p className="mt-3 text-sm leading-relaxed text-[#bdb5ab]">{benefit.text}</p></div>)}</div></div></div></section>
+      <VideoShowcase />
+
+      <section className="bg-[#292827] px-5 py-20 text-[#f8f4ed] sm:px-8 lg:px-12 lg:py-28"><div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-24"><div><p className="mb-5 text-xs font-semibold uppercase tracking-[0.25em] text-[#d7a95e]">Por que a Pianíssima</p><h2 className="max-w-md font-serif text-4xl leading-tight tracking-[-0.03em] sm:text-5xl">Aprender também pode ser um <em className="font-normal text-[#d7a95e]">acolhimento.</em></h2></div><div className="divide-y divide-white/20">{benefits.map((benefit) => <div key={benefit.title} className="grid gap-2 border-t border-white/20 py-6 first:pt-0 sm:grid-cols-[0.8fr_1.2fr] sm:gap-8"><h3 className="font-serif text-2xl">{benefit.title}</h3><p className="text-sm leading-relaxed text-[#bdb5ab]">{benefit.text}</p></div>)}</div></div></section>
 
       <section id="espaco" className="border-y border-[#e3dacf] bg-[#efe9df] px-5 py-20 sm:px-8 lg:px-12 lg:py-28">
         <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.75fr_1.25fr] lg:items-center lg:gap-24">
-          <div><p className="mb-5 text-xs font-semibold uppercase tracking-[0.25em] text-[#b8863e]">Nosso espaço</p><h2 className="font-serif text-4xl leading-tight tracking-[-0.03em] sm:text-5xl">Um ambiente para <em className="font-normal text-[#b8863e]">viver</em> a música.</h2><p className="mt-5 max-w-md leading-relaxed text-[#7b7268]">Conheça cada detalhe do espaço e dos instrumentos que fazem parte da sua jornada.</p></div>
+          <div><p className="mb-5 text-xs font-semibold uppercase tracking-[0.25em] text-[#b8863e]">Nosso espaço</p><h2 className="font-serif text-4xl leading-tight tracking-[-0.03em] sm:text-5xl">Um ambiente para <em className="font-normal text-[#b8863e]">viver</em> a música.</h2><p className="mt-5 max-w-md leading-relaxed text-[#7b7268]">Conheça cada detalhe do espaço e dos instrumentos que fazem parte da sua experiência.</p></div>
           <GalleryCarousel />
         </div>
       </section>
