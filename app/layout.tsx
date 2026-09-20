@@ -4,7 +4,7 @@ import './globals.css'
 
 export const metadata: Metadata = {
   title: 'Pianíssima | Escola de Música em Campo Grande - MS',
-  description: 'Aulas particulares de piano, violão e bateria em Campo Grande/MS. Aprenda música no seu ritmo, em um ambiente acolhedor e com acompanhamento individual.',
+  description: 'Aulas particulares de piano, violão e bateria em Campo Grande/MS. Aprenda música no seu ritmo, com acompanhamento individual.',
   generator: 'v0.app',
   icons: {
     icon: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-9vCGrF4OWF23UEtvlRDJ7VgrTKcWHp.png',

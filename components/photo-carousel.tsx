@@ -78,10 +78,11 @@ export function CarouselDots({ count }: { count: number }) {
   return <p className="mt-4 text-center text-xs uppercase tracking-[0.2em] text-[#8f877d]">Arraste para explorar · {count} fotos</p>
 }
 
-const heroPhoto: Photo = {
-  src: "/espaco-apresentacao.jpeg",
-  alt: "Apresentação musical ao ar livre na Pianíssima",
-}
+export const heroPhotos: Photo[] = [
+  { src: "/espaco-apresentacao.jpeg", alt: "Apresentação musical ao ar livre na Pianíssima" },
+  { src: "/alunos-palco.jpeg", alt: "Alunos reunidos em uma apresentação na Pianíssima" },
+  { src: "/aluna-piano.jpeg", alt: "Aluna tocando piano durante uma aula na Pianíssima" },
+]
 
 export const spacePhotos: Photo[] = [
   { src: "/espaco-apresentacao.jpeg", alt: "Apresentação musical ao ar livre na Pianíssima" },
@@ -100,19 +101,6 @@ export function GalleryCarousel() {
   )
 }
 
-export function HeroPhoto() {
-  return (
-    <div className="relative rotate-3 rounded-[2rem] border border-white/70 bg-[#ebe3d7] p-4 shadow-[0_25px_70px_rgba(80,55,25,0.12)] sm:p-6">
-      <Image
-        src={heroPhoto.src}
-        alt={heroPhoto.alt}
-        width={720}
-        height={540}
-        priority
-        className="aspect-[4/3] w-[min(78vw,440px)] rounded-[1.4rem] object-cover"
-      />
-    </div>
-  )
-}
+
 
 export type { CarouselApi }
