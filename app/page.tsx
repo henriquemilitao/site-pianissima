@@ -9,6 +9,7 @@ import {
   Sparkles,
   Waves,
 } from 'lucide-react'
+import { GalleryCarousel, HeroCarousel } from '@/components/photo-carousel'
 
 const logoUrl = '/logopianissima.jpg'
 const whatsappUrl = 'https://wa.me/5567981047995?text=Ol%C3%A1%2C%20gostaria%20de%20saber%20mais%20sobre%20as%20aulas%20da%20Pian%C3%ADssima.'
@@ -59,9 +60,7 @@ export default function Page() {
           <div className="absolute h-[310px] w-[310px] rounded-full border border-[#d8cbb8] sm:h-[440px] sm:w-[440px]" />
           <div className="absolute h-[250px] w-[250px] rounded-full border border-[#e5dbce] sm:h-[355px] sm:w-[355px]" />
           <div className="absolute -right-4 top-8 h-24 w-24 rounded-full bg-[#b8863e]/10 blur-2xl sm:right-8" />
-          <div className="relative rotate-3 rounded-[2rem] border border-white/70 bg-[#ebe3d7] p-4 shadow-[0_25px_70px_rgba(80,55,25,0.12)] sm:p-6">
-            <Image src={logoUrl} alt="Logo Pianíssima com monograma musical" width={310} height={310} className="h-56 w-56 rounded-[1.4rem] object-contain sm:h-[310px] sm:w-[310px]" priority />
-          </div>
+          <HeroCarousel />
           <div className="absolute bottom-5 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-[#292827] px-5 py-3 text-xs font-medium tracking-[0.12em] text-[#f8f4ed] shadow-xl sm:bottom-8"><span className="mr-2 text-[#d7a95e]">●</span> Comece a tocar</div>
         </div>
       </section>
@@ -79,6 +78,13 @@ export default function Page() {
       </section>
 
       <section className="bg-[#292827] px-5 py-20 text-[#f8f4ed] sm:px-8 lg:px-12 lg:py-28"><div className="mx-auto max-w-7xl"><div className="grid gap-14 lg:grid-cols-[0.8fr_1.2fr] lg:gap-24"><div><p className="mb-5 text-xs font-semibold uppercase tracking-[0.25em] text-[#d7a95e]">Por que a Pianíssima</p><h2 className="max-w-md font-serif text-4xl leading-tight tracking-[-0.03em] sm:text-5xl">Aprender também pode ser um <em className="font-normal text-[#d7a95e]">acolhimento.</em></h2></div><div className="grid gap-9 sm:grid-cols-3">{benefits.map((benefit) => <div key={benefit.number} className="border-t border-white/20 pt-4"><span className="text-xs tracking-[0.2em] text-[#d7a95e]">{benefit.number}</span><h3 className="mt-9 font-serif text-2xl">{benefit.title}</h3><p className="mt-3 text-sm leading-relaxed text-[#bdb5ab]">{benefit.text}</p></div>)}</div></div></div></section>
+
+      <section id="espaco" className="border-y border-[#e3dacf] bg-[#efe9df] px-5 py-20 sm:px-8 lg:px-12 lg:py-28">
+        <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.75fr_1.25fr] lg:items-center lg:gap-24">
+          <div><p className="mb-5 text-xs font-semibold uppercase tracking-[0.25em] text-[#b8863e]">Nosso espaço</p><h2 className="font-serif text-4xl leading-tight tracking-[-0.03em] sm:text-5xl">Um ambiente para <em className="font-normal text-[#b8863e]">viver</em> a música.</h2><p className="mt-5 max-w-md leading-relaxed text-[#7b7268]">Conheça cada detalhe do espaço e dos instrumentos que fazem parte da sua jornada.</p></div>
+          <GalleryCarousel />
+        </div>
+      </section>
 
       <section id="contato" className="mx-auto grid max-w-7xl gap-10 px-5 py-20 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:px-12 lg:py-28"><div><p className="mb-5 text-xs font-semibold uppercase tracking-[0.25em] text-[#b8863e]">Onde estamos</p><h2 className="font-serif text-4xl leading-tight tracking-[-0.03em] sm:text-5xl">A música espera por você em <em className="font-normal text-[#b8863e]">Campo Grande.</em></h2><div className="mt-10 flex gap-4"><MapPin className="mt-1 h-5 w-5 shrink-0 text-[#b8863e]" /><div><p className="font-medium">R. Rio Brilhante, 331</p><p className="mt-1 text-sm leading-relaxed text-[#7b7268]">Vila São Jorge da Lagoa<br />Campo Grande - MS, 79095-071</p></div></div><p className="mt-7 text-sm text-[#7b7268]">Atendimento de segunda a sábado, mediante agendamento.</p></div><div className="min-h-[300px] overflow-hidden rounded-[1.5rem] border border-[#ded3c5] bg-[#eee7dd]"><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3736.4300440874017!2d-54.666709688575125!3d-20.52957818091848!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9486e573ae43db47%3A0xff1d4affd1f23995!2sPian%C3%ADssima%20Aqui%20Tem%20M%C3%BAsica!5e0!3m2!1spt-BR!2sbr!4v1789908566774!5m2!1spt-BR!2sbr" loading="lazy" referrerPolicy="strict-origin-when-cross-origin" className="h-full min-h-[300px] w-full border-0" title="Mapa da Pianíssima Aqui Tem Música" /></div></section>
 
