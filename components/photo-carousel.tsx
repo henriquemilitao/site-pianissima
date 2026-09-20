@@ -35,32 +35,32 @@ export function PhotoCarousel({ photos, variant }: PhotoCarouselProps) {
   if (!photos.length) return null
 
   if (!hasMultiplePhotos) {
-    return (
-      <div className={variant === "hero" ? "relative rotate-3 rounded-[2rem] border border-white/70 bg-[#ebe3d7] p-4 shadow-[0_25px_70px_rgba(80,55,25,0.12)] sm:p-6" : "overflow-hidden rounded-[1.5rem] border border-[#ded3c5] bg-[#ebe3d7] p-3"}>
-        <Image
-          src={photos[0].src}
-          alt={photos[0].alt}
-          width={variant === "hero" ? 310 : 900}
-          height={variant === "hero" ? 310 : 620}
-          className={variant === "hero" ? "h-56 w-56 rounded-[1.4rem] object-contain sm:h-[310px] sm:w-[310px]" : "h-[22rem] w-full rounded-[1.1rem] object-cover sm:h-[30rem]"}
-          priority={variant === "hero"}
-        />
-      </div>
-    )
-  }
+  return (
+    <div className={variant === "hero" ? "relative overflow-hidden rounded-full shadow-[0_25px_70px_rgba(80,55,25,0.12)]" : "overflow-hidden rounded-[1.5rem] border border-[#ded3c5]"}>
+    <Image
+      src={photos[0].src}
+      alt={photos[0].alt}
+      width={variant === "hero" ? 440 : 900}
+      height={variant === "hero" ? 440 : 620}
+      className={variant === "hero" ? "h-56 w-56 object-cover sm:h-[440px] sm:w-[440px]" : "h-[22rem] w-full object-cover sm:h-[30rem]"}
+      priority={variant === "hero"}
+    />
+  </div>
+  )
+}
 
   return (
     <Carousel setApi={setApi} opts={{ loop: true }} className={variant === "hero" ? "w-fit max-w-full" : "w-full"}>
       <CarouselContent>
         {photos.map((photo) => (
           <CarouselItem key={photo.src}>
-            <div className={variant === "hero" ? "relative rotate-3 rounded-[2rem] border border-white/70 bg-[#ebe3d7] p-4 shadow-[0_25px_70px_rgba(80,55,25,0.12)] sm:p-6" : "overflow-hidden rounded-[1.5rem] border border-[#ded3c5] bg-[#ebe3d7] p-3"}>
+            <div className={variant === "hero" ? "relative overflow-hidden rounded-full shadow-[0_25px_70px_rgba(80,55,25,0.12)]" : "overflow-hidden rounded-[1.5rem] border border-[#ded3c5]"}>
               <Image
                 src={photo.src}
                 alt={photo.alt}
-                width={variant === "hero" ? 310 : 900}
-                height={variant === "hero" ? 310 : 620}
-                className={variant === "hero" ? "h-56 w-56 rounded-[1.4rem] object-contain sm:h-[310px] sm:w-[310px]" : "h-[22rem] w-full rounded-[1.1rem] object-cover sm:h-[30rem]"}
+                width={variant === "hero" ? 440 : 900}
+                height={variant === "hero" ? 440 : 620}
+                className={variant === "hero" ? "h-56 w-56 object-cover sm:h-[440px] sm:w-[440px]" : "h-[22rem] w-full object-cover sm:h-[30rem]"}
                 priority={variant === "hero"}
               />
             </div>
