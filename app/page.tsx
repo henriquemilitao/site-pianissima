@@ -56,8 +56,8 @@ export default function Page() {
           <div className="absolute h-[310px] w-[310px] rounded-full border border-[#d8cbb8] sm:h-[440px] sm:w-[440px]" />
           <div className="absolute h-[250px] w-[250px] rounded-full border border-[#e5dbce] sm:h-[355px] sm:w-[355px]" />
           <div className="absolute -right-4 top-8 h-24 w-24 rounded-full bg-[#b8863e]/10 blur-2xl sm:right-8" />
-          <div className="w-full max-w-[440px]">
-            <PhotoCarousel photos={heroPhotos} variant="hero" />
+          <div className="mx-auto w-fit">
+              <PhotoCarousel photos={heroPhotos} variant="hero" />
           </div>
           <div className="absolute bottom-5 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-[#292827] px-5 py-3 text-xs font-medium tracking-[0.12em] text-[#f8f4ed] shadow-xl sm:bottom-8"><span className="mr-2 text-[#d7a95e]">●</span> Comece a tocar</div>
         </div>
