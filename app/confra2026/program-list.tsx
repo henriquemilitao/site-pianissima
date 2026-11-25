@@ -5,7 +5,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Drum, Guitar, Piano, Search, Sparkles, X, type LucideIcon } from 'lucide-react'
-import type { Apresentacao, Bloco } from './programa'
+import type { Apresentacao, Bloco, Musica } from './programa'
 
 const icones: Record<Bloco['tipo'], LucideIcon> = { piano: Piano, violao: Guitar, banda: Drum, final: Sparkles }
 
@@ -15,7 +15,7 @@ const dois = (n: number) => String(n).padStart(2, '0')
 // Busca sem acento e sem diferenciar maiúsculas: "agatha" encontra "Ágatha"
 const normalizar = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
 const textoBusca = (a: Apresentacao) =>
-  normalizar([...a.alunos, a.musica ?? '', a.artista ?? '', ...(a.acompanhamento ?? []).map((m) => m.nome)].join(' '))
+  normalizar([...a.alunos, ...a.musicas.flatMap((m) => [m.titulo, m.artista ?? '']), ...(a.acompanhamento ?? []).map((m) => m.nome)].join(' '))
 
 export function ProgramList({ programa }: { programa: Bloco[] }) {
   const [busca, setBusca] = useState('')
@@ -141,9 +141,7 @@ function BlocoLista({ bloco }: { bloco: Bloco }) {
             <span className="w-7 shrink-0 pt-0.5 font-serif text-lg leading-none tabular-nums text-[#b8863e]" aria-label={`Faixa ${a.faixa}`}>{dois(a.faixa)}</span>
             <div className="min-w-0 flex-1">
               <p className="text-[15px] font-semibold leading-snug text-[#292827]">{a.alunos.join(' & ')}</p>
-              {a.musica
-                ? <p className="mt-1 font-serif text-[17px] leading-snug text-[#514b44]">{a.musica}{a.artista && <span className="font-sans text-[13px] text-[#8f877d]"> · {a.artista}</span>}</p>
-                : <p className="mt-1 font-serif text-[15px] italic text-[#a39a8f]">Música a definir</p>}
+              <Musicas musicas={a.musicas} />
               {a.acompanhamento && (
                 <p className="mt-2 text-xs leading-relaxed text-[#8f877d]">
                   <span className="font-semibold uppercase tracking-[0.12em] text-[#a39a8f]">Banda </span>
@@ -158,6 +156,25 @@ function BlocoLista({ bloco }: { bloco: Bloco }) {
   )
 }
 
+// Uma música: linha simples. Várias: lista numerada na ordem em que serão tocadas.
+function Musicas({ musicas }: { musicas: Musica[] }) {
+  const linha = (m: Musica) => (
+    <>{m.titulo}{m.artista && <span className="font-sans text-[13px] text-[#8f877d]"> · {m.artista}</span>}</>
+  )
+  if (musicas.length === 0) return <p className="mt-1 font-serif text-[15px] italic text-[#a39a8f]">Música a definir</p>
+  if (musicas.length === 1) return <p className="mt-1 font-serif text-[17px] leading-snug text-[#514b44]">{linha(musicas[0])}</p>
+  return (
+    <ol className="mt-1.5 space-y-1.5" aria-label="Músicas, na ordem">
+      {musicas.map((m, i) => (
+        <li key={m.titulo} className="flex gap-2.5 font-serif text-[17px] leading-snug text-[#514b44]">
+          <span className="mt-[3px] flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-[#d9cbb6] font-sans text-[10px] font-semibold text-[#b8863e]" aria-hidden>{i + 1}</span>
+          <span>{linha(m)}</span>
+        </li>
+      ))}
+    </ol>
+  )
+}
+
 // Encerramento em destaque (cartão escuro, mesma linguagem das seções escuras da home)
 function Final({ bloco }: { bloco: Bloco }) {
   const a = bloco.apresentacoes[0]
@@ -167,8 +184,8 @@ function Final({ bloco }: { bloco: Bloco }) {
         <p className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-[#d7a95e]">
           <Sparkles className="h-3.5 w-3.5" aria-hidden /> Faixa {dois(a.faixa)} · Grande final
         </p>
-        <h2 id="final-titulo" className="mt-4 font-serif text-3xl leading-tight tracking-[-0.02em]">{a.musica}</h2>
-        {a.artista && <p className="mt-1 text-sm text-[#bdb5ab]">{a.artista}</p>}
+        <h2 id="final-titulo" className="mt-4 font-serif text-3xl leading-tight tracking-[-0.02em]">{a.musicas[0]?.titulo}</h2>
+        {a.musicas[0]?.artista && <p className="mt-1 text-sm text-[#bdb5ab]">{a.musicas[0].artista}</p>}
         <p className="mt-6 border-t border-white/15 pt-5 text-xs font-semibold uppercase tracking-[0.16em] text-[#bdb5ab]">{a.alunos[0]}</p>
         <dl className="mt-3 grid grid-cols-[auto_1fr] gap-x-5 gap-y-2 text-sm">
           {a.acompanhamento?.map((m) => (
