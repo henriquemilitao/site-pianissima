@@ -4,7 +4,7 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import { evento } from '../confra2026/programa'
-import { familias, totalPessoas } from './convidados'
+import { familias } from './convidados'
 import { ListaPresenca } from './lista-presenca'
 
 export const metadata: Metadata = {
@@ -25,10 +25,10 @@ export default function ListaPage() {
             <p className="mt-1 truncate font-serif text-sm italic text-[#b8863e]">{evento.nome} · {evento.tema}</p>
           </div>
         </div>
-        <p className="mt-4 text-sm text-[#6f685f]">{totalPessoas} pessoas · busque e toque em quem chegou.</p>
       </header>
 
-      <ListaPresenca familias={familias} total={totalPessoas} />
+      {/* Total e contagem ficam no componente: mudam com os avulsos */}
+      <ListaPresenca familias={familias} />
     </main>
   )
 }

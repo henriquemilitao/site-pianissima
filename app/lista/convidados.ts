@@ -1,9 +1,16 @@
 // Lista de presença do recital (página /lista) — fonte única dos dados.
 // Para incluir ou corrigir alguém, edite só `grupos`. Alunos com o nome do programa (/confra2026).
 // O nome vira a chave da marcação salva no aparelho: não repita nomes nem renomeie quem já foi marcado.
+// Avulsos (quem chega na hora) não ficam aqui: são adicionados pela própria página.
 
-type Convidado = string | { nome: string; obs: string } // obs: detalhe curto (ex.: "5 anos")
-type Grupo = { alunos: string[]; convidados: Convidado[]; outrasGrafias?: string[] } // outrasGrafias: só para a busca
+// Situação do pagamento de cada convidado. Alunos e professores não pagam.
+export const STATUS = { pago: 'Pago', depois: 'Paga depois', cortesia: 'Cortesia' } as const
+export type Status = keyof typeof STATUS
+
+// Convidado: só o nome (já pagou) ou com detalhes. obs: detalhe curto (ex.: "5 anos")
+type Convidado = string | { nome: string; obs?: string; status?: Status }
+// Titulares do cartão: alunos e/ou professores. outrasGrafias: só para a busca
+type Grupo = { alunos?: string[]; professores?: string[]; convidados: Convidado[]; outrasGrafias?: string[] }
 
 const grupos: Grupo[] = [
   {
@@ -70,26 +77,35 @@ const grupos: Grupo[] = [
   { alunos: ['Fernanda Vilela Monteiro'], convidados: ['Cristiane Vilela Albino'] },
   { alunos: ['Arthur Morales Silva'], convidados: ['Antonio Carlos Mussi da Silva', 'Gabriela Morales', 'Mara Sandra Garcia'] },
   { alunos: ['Gustavo Henrique Fama da Silva'], convidados: ['Graziele de Oliveira Fama', 'Élder de Sousa Teles'] },
-  // Está no programa, mas não veio na lista das famílias
-  { alunos: ['Maria Eduarda Silva'], convidados: [] },
+  { alunos: ['Maria Eduarda Silva'], convidados: ['Julia Xixa'] },
+  // Professor entra para ter a contagem dele também
+  { professores: ['Thiago Guimarães'], convidados: ['Laís Aquino'] },
 ]
 
-export type Pessoa = { id: string; nome: string; obs?: string; aluno: boolean; busca: string }
+// titular: aluno ou professor dono do cartão. status: só convidados. avulso: adicionado na hora pela página
+export type Pessoa = { id: string; nome: string; titular: boolean; busca: string; obs?: string; status?: Status; avulso?: boolean }
 export type Familia = { id: string; pessoas: Pessoa[] }
+// Avulso como é salvo (no aparelho e no Redis); familia = id do cartão onde foi adicionado
+export type Avulso = { nome: string; status: Status; familia: string; criadoEm: number }
 
 // Busca sem acento e sem diferenciar maiúsculas: "agatha" encontra "Ágatha"
-export const normalizar = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
+export const normalizar = (s: string) => s.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase()
 const chave = (nome: string) => normalizar(nome).replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
 
-const pessoa = (nome: string, aluno: boolean, obs?: string, extra = ''): Pessoa =>
-  ({ id: chave(nome), nome, obs, aluno, busca: normalizar(`${nome} ${extra}`) })
+const pessoa = (nome: string, titular: boolean, extra: Partial<Pessoa> = {}, outrasGrafias = ''): Pessoa =>
+  ({ id: chave(nome), nome, titular, busca: normalizar(`${nome} ${outrasGrafias}`), ...extra })
 
-// Em ordem alfabética pelo aluno; em cada família, alunos primeiro e depois convidados
+// Em ordem alfabética pelo titular; em cada cartão, titulares primeiro e depois convidados (todos pagos, salvo indicação)
 export const familias: Familia[] = grupos
   .map((g) => {
+    const grafias = g.outrasGrafias?.join(' ')
     const pessoas = [
-      ...g.alunos.map((nome) => pessoa(nome, true, undefined, g.outrasGrafias?.join(' '))),
-      ...g.convidados.map((c) => (typeof c === 'string' ? pessoa(c, false) : pessoa(c.nome, false, c.obs))),
+      ...(g.alunos ?? []).map((nome) => pessoa(nome, true, {}, grafias)),
+      ...(g.professores ?? []).map((nome) => pessoa(nome, true, { obs: 'professor' }, grafias)),
+      ...g.convidados.map((c) => {
+        const { nome, obs, status = 'pago' }: Exclude<Convidado, string> = typeof c === 'string' ? { nome: c } : c
+        return pessoa(nome, false, { obs, status })
+      }),
     ]
     return { id: pessoas[0].id, pessoas }
   })
