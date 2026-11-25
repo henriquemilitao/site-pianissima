@@ -4,7 +4,8 @@
 // Avulsos (quem chega na hora) não ficam aqui: são adicionados pela própria página.
 
 // Situação do pagamento de cada convidado. Alunos e professores não pagam.
-export const STATUS = { pago: 'Pago', depois: 'Paga depois', cortesia: 'Cortesia' } as const
+// agora: avulso que pagou na entrada (Pix pelo QR do formulário)
+export const STATUS = { pago: 'Pago', agora: 'Pagou na entrada', depois: 'Paga depois', cortesia: 'Cortesia' } as const
 export type Status = keyof typeof STATUS
 
 // Convidado: só o nome (já pagou) ou com detalhes. obs: detalhe curto (ex.: "5 anos")

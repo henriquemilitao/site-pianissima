@@ -11,6 +11,7 @@ import { useSincronizacao, type Avulsos, type Marcas, type Modo } from './use-si
 
 const CORES_STATUS: Record<Status, string> = {
   pago: 'bg-[#e6f0e9] text-[#2f7a4b]',
+  agora: 'bg-[#e2f0ef] text-[#1f6f6a]',
   depois: 'bg-[#fdebd8] text-[#b45309]',
   cortesia: 'bg-[#f3e9d6] text-[#8a6424]',
 }

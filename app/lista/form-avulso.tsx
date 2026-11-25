@@ -4,7 +4,17 @@
 // Fica no alto da tela para o teclado do celular não cobrir os botões.
 
 import { useEffect, useState } from 'react'
-import { STATUS, type Status } from './convidados'
+import type { Status } from './convidados'
+import { PIX } from './pix'
+
+// Rótulos do formulário (a etiqueta na lista usa STATUS: "Pagar agora" vira "Pagou na entrada")
+const OPCOES: { status: Status; rotulo: string }[] = [
+  { status: 'pago', rotulo: 'Já pagou' },
+  { status: 'agora', rotulo: 'Pagar agora' },
+  { status: 'depois', rotulo: 'Paga depois' },
+  { status: 'cortesia', rotulo: 'Cortesia' },
+]
+const valor = PIX.valorAvulso.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
 
 type Dados = { nome: string; status: Status }
 type Props = {
@@ -57,21 +67,38 @@ export function FormAvulso({ titular, inicial, onSalvar, onRemover, onFechar }: 
 
         <fieldset className="mt-5">
           <legend className="text-sm font-semibold text-[#5e574f]">Pagamento</legend>
-          <div className="mt-2 grid grid-cols-3 gap-2">
-            {(Object.keys(STATUS) as Status[]).map((s) => (
+          <div className="mt-2 grid grid-cols-2 gap-2">
+            {OPCOES.map((o) => (
               <button
-                key={s}
+                key={o.status}
                 type="button"
-                aria-pressed={status === s}
-                onClick={() => setStatus(s)}
+                aria-pressed={status === o.status}
+                onClick={() => setStatus(o.status)}
                 className={`min-h-12 rounded-xl border px-2 text-sm font-semibold transition-colors ${
-                  status === s ? 'border-[#292827] bg-[#292827] text-white' : 'border-[#ded3c5] bg-white text-[#5e574f]'}`}
+                  status === o.status ? 'border-[#292827] bg-[#292827] text-white' : 'border-[#ded3c5] bg-white text-[#5e574f]'}`}
               >
-                {STATUS[s]}
+                {o.rotulo}
               </button>
             ))}
           </div>
         </fieldset>
+
+        {/* Pagar agora: QR para a pessoa ler no app do banco + dados para o organizador falar */}
+        {status === 'agora' && (
+          <div className="mt-4 rounded-2xl border border-[#e3dacf] bg-white p-4 text-center">
+            {/* eslint-disable-next-line @next/next/no-img-element -- SVG estático, não precisa de otimização */}
+            <img src={PIX.qr} alt="QR Code do Pix" width={208} height={208} className="mx-auto h-52 w-52" />
+            <p className="mt-3 font-serif text-2xl">
+              {valor} <span className="font-sans text-sm text-[#6f685f]">por pessoa</span>
+            </p>
+            <p className="mt-1 text-sm text-[#6f685f]">
+              Chave Pix (celular): <strong className="whitespace-nowrap text-[#292827]">{PIX.chave}</strong>
+            </p>
+            <p className="mt-2 text-xs leading-relaxed text-[#8f877d]">
+              A pessoa lê o QR no app do banco e digita o valor. Confira o comprovante e toque em Adicionar.
+            </p>
+          </div>
+        )}
 
         <div className="mt-6 flex items-center gap-2">
           {onRemover && (
