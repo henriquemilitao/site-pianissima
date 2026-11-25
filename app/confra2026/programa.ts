@@ -16,7 +16,9 @@ export type Bloco = {
   id: string // âncora usada na navegação (#piano-1)
   titulo: string
   parte?: string
-  tipo: 'piano' | 'violao' | 'banda' | 'final'
+  atalho?: string // rótulo curto do atalho; padrão: título + número da parte
+  descricao?: string // linha de apoio abaixo do título do bloco
+  tipo: 'piano' | 'violao' | 'banda' | 'ead' | 'final'
   apresentacoes: Apresentacao[]
 }
 
@@ -39,6 +41,19 @@ export const programa: Bloco[] = [
       { faixa: 7, alunos: ['Camila Ferreira Garcia'], musicas: [{ titulo: 'Je Te Laisserai des Mots', artista: 'Patrick Watson' }] },
       { faixa: 8, alunos: ['Heloisa Tavares Souza'], musicas: [{ titulo: 'Put Your Head on My Shoulder', artista: 'Paul Anka' }] },
       { faixa: 9, alunos: ['Daniel Santos Silva'], musicas: [{ titulo: 'Depois do Universo', artista: 'Giulia Be' }] },
+    ],
+  },
+  {
+    // Alunos a distância, apresentados em vídeo. Aqui "faixa" é a ordem no vídeo (EAD 01–05):
+    // não entra na numeração das faixas ao vivo nem no total de apresentações.
+    id: 'ead', titulo: 'Momento EAD', atalho: 'EAD', tipo: 'ead',
+    descricao: 'Alunos que estudam com a gente a distância. Apresentações em vídeo.',
+    apresentacoes: [
+      { faixa: 1, alunos: ['Rafael'], musicas: [{ titulo: 'Deus é Tão Bom', artista: 'Estéfano Rutuna' }] },
+      { faixa: 2, alunos: ['Laura'], musicas: [{ titulo: 'O Beija-Flor', artista: 'Mário Mascarenhas' }] },
+      { faixa: 3, alunos: ['Mateus Bittencourt Espindola'], musicas: [{ titulo: 'Batuque', artista: 'Mário Mascarenhas' }] },
+      { faixa: 4, alunos: ['Guilherme'], musicas: [{ titulo: 'Marcha Turca', artista: 'W.A. Mozart' }] },
+      { faixa: 5, alunos: ['Daniel'], musicas: [{ titulo: 'Não Há o que Temer', artista: 'Ricardo Martins' }] },
     ],
   },
   {
@@ -103,4 +118,6 @@ export const programa: Bloco[] = [
   },
 ]
 
-export const totalApresentacoes = programa.reduce((total, bloco) => total + bloco.apresentacoes.length, 0)
+const contar = (blocos: Bloco[]) => blocos.reduce((total, bloco) => total + bloco.apresentacoes.length, 0)
+export const totalApresentacoes = contar(programa.filter((b) => b.tipo !== 'ead')) // ao vivo
+export const totalEad = contar(programa.filter((b) => b.tipo === 'ead'))

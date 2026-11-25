@@ -4,13 +4,13 @@
 // É o único trecho client-side da página; o resto é renderizado no servidor (HTML estático).
 
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Drum, Guitar, Piano, Search, Sparkles, X, type LucideIcon } from 'lucide-react'
+import { Drum, Globe, Guitar, Piano, Search, Sparkles, X, type LucideIcon } from 'lucide-react'
 import type { Apresentacao, Bloco, Musica } from './programa'
 
-const icones: Record<Bloco['tipo'], LucideIcon> = { piano: Piano, violao: Guitar, banda: Drum, final: Sparkles }
+const icones: Record<Bloco['tipo'], LucideIcon> = { piano: Piano, violao: Guitar, banda: Drum, ead: Globe, final: Sparkles }
 
 // Rótulo curto do atalho (ex.: "Piano 1")
-const rotulo = (b: Bloco) => (b.parte ? `${b.titulo} ${b.parte.replace('Parte ', '')}` : b.titulo)
+const rotulo = (b: Bloco) => b.atalho ?? (b.parte ? `${b.titulo} ${b.parte.replace('Parte ', '')}` : b.titulo)
 const dois = (n: number) => String(n).padStart(2, '0')
 // Busca sem acento e sem diferenciar maiúsculas: "agatha" encontra "Ágatha"
 const normalizar = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
@@ -119,7 +119,8 @@ export function ProgramList({ programa }: { programa: Bloco[] }) {
 function CabecalhoBloco({ bloco }: { bloco: Bloco }) {
   const Icone = icones[bloco.tipo]
   const faixas = bloco.apresentacoes.map((a) => a.faixa)
-  const intervalo = faixas.length > 1 ? `Faixas ${dois(faixas[0])}–${dois(faixas[faixas.length - 1])}` : `Faixa ${dois(faixas[0])}`
+  const intervalo = bloco.tipo === 'ead' ? 'Em vídeo'
+    : faixas.length > 1 ? `Faixas ${dois(faixas[0])}–${dois(faixas[faixas.length - 1])}` : `Faixa ${dois(faixas[0])}`
   return (
     <div className="flex items-end justify-between gap-4 border-b border-[#292827] pb-3">
       <h2 id={`${bloco.id}-titulo`} className="flex items-center gap-3 font-serif text-[1.75rem] leading-none tracking-[-0.02em] text-[#292827]">
@@ -135,10 +136,11 @@ function BlocoLista({ bloco }: { bloco: Bloco }) {
   return (
     <section id={bloco.id} aria-labelledby={`${bloco.id}-titulo`} className="scroll-mt-32 pt-8">
       <CabecalhoBloco bloco={bloco} />
+      {bloco.descricao && <p className="pt-3 text-sm leading-relaxed text-[#7b7268]">{bloco.descricao}</p>}
       <ol className="divide-y divide-[#e3dacf]">
         {bloco.apresentacoes.map((a) => (
           <li key={a.faixa} className="flex gap-4 py-4">
-            <span className="w-7 shrink-0 pt-0.5 font-serif text-lg leading-none tabular-nums text-[#b8863e]" aria-label={`Faixa ${a.faixa}`}>{dois(a.faixa)}</span>
+            <span className="w-7 shrink-0 pt-0.5 font-serif text-lg leading-none tabular-nums text-[#b8863e]" aria-label={`${bloco.tipo === 'ead' ? 'EAD' : 'Faixa'} ${a.faixa}`}>{dois(a.faixa)}</span>
             <div className="min-w-0 flex-1">
               <p className="text-[15px] font-semibold leading-snug text-[#292827]">{a.alunos.join(' & ')}</p>
               <Musicas musicas={a.musicas} />

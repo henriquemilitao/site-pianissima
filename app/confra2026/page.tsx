@@ -4,9 +4,9 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowLeft, CalendarDays, ListMusic } from 'lucide-react'
+import { ArrowLeft, CalendarDays, Globe, ListMusic } from 'lucide-react'
 import { ProgramList } from './program-list'
-import { evento, programa, totalApresentacoes } from './programa'
+import { evento, programa, totalApresentacoes, totalEad } from './programa'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://pianissima.com.br'),
@@ -45,6 +45,7 @@ export default function Confra2026Page() {
         <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-[#6f685f]">
           <span className="inline-flex items-center gap-2"><CalendarDays className="h-4 w-4 text-[#b8863e]" aria-hidden /> {evento.data}</span>
           <span className="inline-flex items-center gap-2"><ListMusic className="h-4 w-4 text-[#b8863e]" aria-hidden /> {totalApresentacoes} apresentações</span>
+          <span className="inline-flex items-center gap-2"><Globe className="h-4 w-4 text-[#b8863e]" aria-hidden /> {totalEad} alunos EAD</span>
         </div>
       </section>
 
