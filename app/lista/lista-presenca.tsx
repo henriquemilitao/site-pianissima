@@ -1,47 +1,122 @@
 'use client'
 
 // Check-in da recepção: busca aluno ou convidado, marca quem chegou com um toque e mostra a contagem.
-// Marcações ficam no localStorage deste aparelho: sobrevivem a recarregar a página, mas não sincronizam entre aparelhos.
+// Com o Redis configurado (app/api/lista), as marcações sincronizam entre aparelhos a cada 3 s; sem ele,
+// ficam só neste aparelho. O que for marcado sem internet espera numa fila e é enviado quando a conexão volta.
 
 import { useEffect, useRef, useState } from 'react'
 import { Check, CheckCheck, Search, Undo2, X } from 'lucide-react'
 import { normalizar, type Familia, type Pessoa } from './convidados'
 
-const CHAVE = 'pianissima:lista-confra2026'
-type Marcas = Record<string, number> // id da pessoa → horário de chegada (ms)
+const CHAVE = 'pianissima:lista-confra2026' // cópia local das marcações
+const CHAVE_FILA = 'pianissima:lista-confra2026:fila' // mudanças ainda não enviadas ao servidor
+const INTERVALO = 3000 // ms entre sincronizações
 
-const lerMarcas = (): Marcas => {
+type Marcas = Record<string, number> // id da pessoa → horário de chegada (ms)
+type Mudancas = Record<string, number | null> // null = desmarcar
+type Modo = 'conectando' | 'local' | 'compartilhado'
+
+const ler = <T,>(chave: string, padrao: T): T => {
   try {
-    return JSON.parse(localStorage.getItem(CHAVE) ?? '{}')
+    return (JSON.parse(localStorage.getItem(chave) ?? 'null') as T) ?? padrao
   } catch {
-    return {}
+    return padrao
   }
+}
+const gravar = (chave: string, valor: unknown) => {
+  try {
+    localStorage.setItem(chave, JSON.stringify(valor))
+  } catch {
+    // Armazenamento indisponível: segue funcionando só em memória
+  }
+}
+const aplicar = (base: Marcas, mudancas: Mudancas): Marcas => {
+  const novo = { ...base }
+  for (const [id, ts] of Object.entries(mudancas)) {
+    if (ts === null) delete novo[id]
+    else novo[id] = ts
+  }
+  return novo
 }
 const hora = (ms: number) => new Date(ms).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
 
 export function ListaPresenca({ familias, total }: { familias: Familia[]; total: number }) {
   const [marcas, setMarcas] = useState<Marcas>({})
-  const [pronto, setPronto] = useState(false) // só salva depois de ler o que já estava marcado
+  const [pronto, setPronto] = useState(false) // só grava depois de ler o que já estava salvo
+  const [modo, setModo] = useState<Modo>('conectando')
+  const [online, setOnline] = useState(true) // a última conversa com o servidor deu certo
+  const [pendentes, setPendentes] = useState(0) // mudanças na fila esperando conexão
   const [busca, setBusca] = useState('')
   const [desfazer, setDesfazer] = useState<string[] | null>(null) // ids do último "Marcar todos"
+  const fila = useRef<Mudancas>({})
+  const sincronizar = useRef<() => void>(() => {})
   const topoBarraRef = useRef<HTMLDivElement>(null)
 
-  // Lê as marcações salvas e acompanha mudanças feitas em outra aba deste aparelho
+  const guardarFila = () => {
+    gravar(CHAVE_FILA, fila.current)
+    setPendentes(Object.keys(fila.current).length)
+  }
+
+  // Carrega a cópia local e conversa com o servidor: envia a fila e traz o que os outros aparelhos marcaram
   useEffect(() => {
-    setMarcas(lerMarcas())
+    setMarcas(ler(CHAVE, {}))
+    fila.current = ler(CHAVE_FILA, {})
+    setPendentes(Object.keys(fila.current).length)
     setPronto(true)
-    const sincronizar = (e: StorageEvent) => e.key === CHAVE && setMarcas(lerMarcas())
-    window.addEventListener('storage', sincronizar)
-    return () => window.removeEventListener('storage', sincronizar)
+
+    let modoAtual: Modo = 'conectando'
+    let ocupado = false
+    let parado = false
+
+    const ciclo = async () => {
+      if (parado || ocupado || modoAtual === 'local') return
+      ocupado = true
+      const envio = { ...fila.current }
+      const temEnvio = Object.keys(envio).length > 0
+      let deuCerto = false
+      try {
+        const res = await fetch('/api/lista', {
+          cache: 'no-store',
+          ...(temEnvio && { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mudancas: envio }) }),
+        })
+        if (!res.ok) throw new Error(String(res.status))
+        const dados = (await res.json()) as { modo: Modo; marcas?: Marcas }
+        if (parado) return
+        modoAtual = dados.modo
+        setModo(dados.modo)
+        // Sai da fila o que foi enviado e não mudou de novo enquanto isso
+        for (const [id, ts] of Object.entries(envio)) if (fila.current[id] === ts) delete fila.current[id]
+        if (dados.modo === 'local') fila.current = {} // servidor sem banco: tudo fica só neste aparelho
+        else setMarcas(aplicar(dados.marcas ?? {}, fila.current))
+        guardarFila()
+        setOnline(true)
+        deuCerto = true
+      } catch {
+        if (!parado) setOnline(false)
+      } finally {
+        ocupado = false
+      }
+      // Entrou mudança durante o envio: manda logo, sem esperar o próximo ciclo
+      if (deuCerto && Object.keys(fila.current).length) void ciclo()
+    }
+    sincronizar.current = () => void ciclo()
+
+    void ciclo()
+    const timer = setInterval(() => document.visibilityState === 'visible' && void ciclo(), INTERVALO)
+    const aoVoltar = () => document.visibilityState === 'visible' && void ciclo()
+    const outraAba = (e: StorageEvent) => e.key === CHAVE && setMarcas(ler(CHAVE, {}))
+    document.addEventListener('visibilitychange', aoVoltar)
+    window.addEventListener('storage', outraAba)
+    return () => {
+      parado = true
+      clearInterval(timer)
+      document.removeEventListener('visibilitychange', aoVoltar)
+      window.removeEventListener('storage', outraAba)
+    }
   }, [])
 
   useEffect(() => {
-    if (!pronto) return
-    try {
-      localStorage.setItem(CHAVE, JSON.stringify(marcas))
-    } catch {
-      // Armazenamento indisponível: segue funcionando só em memória
-    }
+    if (pronto) gravar(CHAVE, marcas)
   }, [marcas, pronto])
 
   // O "Desfazer" some sozinho depois de alguns segundos
@@ -62,28 +137,26 @@ export function ListaPresenca({ familias, total }: { familias: Familia[]; total:
     ? [...familias.filter(alunoBate), ...familias.filter((f) => !alunoBate(f) && f.pessoas.some(encontrou))]
     : familias
 
-  const alternar = (id: string) =>
-    setMarcas((m) => {
-      const novo = { ...m }
-      if (novo[id]) delete novo[id]
-      else novo[id] = Date.now()
-      return novo
-    })
+  // Aplica na tela na hora; no modo compartilhado também entra na fila e é enviado em seguida
+  const mudar = (mudancas: Mudancas) => {
+    setMarcas((m) => aplicar(m, mudancas))
+    if (modo === 'local') return
+    Object.assign(fila.current, mudancas)
+    guardarFila()
+    sincronizar.current()
+  }
+
+  const alternar = (id: string) => mudar({ [id]: marcas[id] ? null : Date.now() })
 
   const marcarTodos = (f: Familia) => {
-    const ids = f.pessoas.filter((p) => !marcas[p.id]).map((p) => p.id)
     const agora = Date.now()
-    setMarcas((m) => ({ ...m, ...Object.fromEntries(ids.map((id) => [id, agora])) }))
+    const ids = f.pessoas.filter((p) => !marcas[p.id]).map((p) => p.id)
+    mudar(Object.fromEntries(ids.map((id) => [id, agora])))
     setDesfazer(ids)
   }
 
   const desfazerUltimo = () => {
-    const ids = desfazer ?? []
-    setMarcas((m) => {
-      const novo = { ...m }
-      ids.forEach((id) => delete novo[id])
-      return novo
-    })
+    mudar(Object.fromEntries((desfazer ?? []).map((id) => [id, null])))
     setDesfazer(null)
   }
 
@@ -98,8 +171,25 @@ export function ListaPresenca({ familias, total }: { familias: Familia[]; total:
     setDesfazer(null) // o "Desfazer" vale só para a família que estava na tela
   }
 
-  const zerar = () => {
-    if (!window.confirm('Apagar todas as marcações deste aparelho?')) return
+  // Para depois dos testes. No modo compartilhado apaga de todos os aparelhos, por isso pede confirmação digitada.
+  const zerar = async () => {
+    if (modo === 'compartilhado') {
+      const confirmacao = window.prompt('Isso apaga as marcações de TODOS os aparelhos. Digite ZERAR para confirmar.')
+      if (confirmacao?.trim().toUpperCase() !== 'ZERAR') return
+      try {
+        const res = await fetch('/api/lista', {
+          method: 'POST', cache: 'no-store', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ zerar: true }),
+        })
+        if (!res.ok) throw new Error(String(res.status))
+      } catch {
+        window.alert('Sem conexão. Tente de novo.')
+        return
+      }
+      fila.current = {}
+      guardarFila()
+    } else if (!window.confirm('Apagar todas as marcações deste aparelho?')) {
+      return
+    }
     setMarcas({})
     setDesfazer(null)
   }
@@ -110,12 +200,12 @@ export function ListaPresenca({ familias, total }: { familias: Familia[]; total:
       <div ref={topoBarraRef} />
       <div className="sticky top-0 z-20 border-b border-[#e3dacf] bg-[#f6f2eb]/95 backdrop-blur supports-[backdrop-filter]:bg-[#f6f2eb]/80">
         <div className="mx-auto max-w-3xl px-5 pb-3 pt-3 sm:px-8">
-          <div className="flex items-baseline justify-between gap-4">
+          <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
             <p className="flex items-baseline gap-5">
               <Contador valor={chegaram} rotulo="chegaram" pronto={pronto} cor="text-[#2f7a4b]" />
               <Contador valor={total - chegaram} rotulo="faltam" pronto={pronto} />
             </p>
-            <span className="text-sm text-[#8f877d]">de {total}</span>
+            <Status modo={modo} online={online} pendentes={pendentes} />
           </div>
           <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-[#e3dacf]" role="progressbar" aria-label="Chegaram"
             aria-valuemin={0} aria-valuemax={total} aria-valuenow={chegaram}>
@@ -173,7 +263,11 @@ export function ListaPresenca({ familias, total }: { familias: Familia[]; total:
 
         {!buscando && (
           <footer className="mt-12 border-t border-[#e3dacf] pt-6 text-center">
-            <p className="text-xs text-[#8f877d]">As marcações ficam salvas neste aparelho.</p>
+            <p className="text-xs text-[#8f877d]">
+              {modo === 'compartilhado'
+                ? 'As marcações aparecem em todos os aparelhos com esta página aberta.'
+                : 'As marcações ficam salvas neste aparelho.'}
+            </p>
             <button type="button" onClick={zerar}
               className="mt-3 rounded-full border border-[#ded3c5] px-4 py-2 text-xs font-semibold text-[#8f877d] hover:border-[#b4483c] hover:text-[#b4483c]">
               Zerar marcações
@@ -203,6 +297,20 @@ function Contador({ valor, rotulo, pronto, cor = 'text-[#292827]' }: { valor: nu
     <span className="inline-flex items-baseline gap-1.5">
       <strong className={`font-serif text-[1.75rem] leading-none tabular-nums ${cor}`}>{pronto ? valor : '–'}</strong>
       <span className="text-sm text-[#6f685f]">{rotulo}</span>
+    </span>
+  )
+}
+
+// Indicador discreto: mostra se a lista está sincronizando entre aparelhos ou só salva neste
+function Status({ modo, online, pendentes }: { modo: Modo; online: boolean; pendentes: number }) {
+  const [cor, texto] =
+    modo === 'local' ? ['bg-[#a39a8f]', 'Só neste aparelho']
+    : !online ? ['bg-[#c2410c]', pendentes ? `Sem conexão (${pendentes})` : 'Sem conexão']
+    : modo === 'compartilhado' ? ['bg-[#2f7a4b]', 'Sincronizado']
+    : ['bg-[#a39a8f]', 'Conectando…']
+  return (
+    <span className="inline-flex items-center gap-1.5 text-xs text-[#6f685f]">
+      <span className={`h-2 w-2 rounded-full ${cor}`} aria-hidden /> {texto}
     </span>
   )
 }

@@ -25,7 +25,7 @@ export default function ListaPage() {
             <p className="mt-1 truncate font-serif text-sm italic text-[#b8863e]">{evento.nome} · {evento.tema}</p>
           </div>
         </div>
-        <p className="mt-4 text-sm text-[#6f685f]">Busque o nome e toque em quem chegou.</p>
+        <p className="mt-4 text-sm text-[#6f685f]">{totalPessoas} pessoas · busque e toque em quem chegou.</p>
       </header>
 
       <ListaPresenca familias={familias} total={totalPessoas} />
