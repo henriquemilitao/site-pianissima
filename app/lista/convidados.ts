@@ -17,7 +17,7 @@ const grupos: Grupo[] = [
     alunos: ['Helena Gomes Borges', 'Letícia Gomes Borges'],
     convidados: [
       'Iraci Gomes de Oliveira', 'Jackeline Gomes de Oliveira', 'Anderson Meireles Allan',
-      'Allana Andressa Gomes do Nascimento Meireles', 'José Gilberto Vasques Borges', { nome: 'Géssica', obs: 'esposa' },
+      'Allana Andressa Gomes do Nascimento Meireles', 'José Gilberto Vasques Borges', 'Géssica',
     ],
   },
   {
@@ -70,7 +70,10 @@ const grupos: Grupo[] = [
   { alunos: ['Camila Ferreira Garcia'], convidados: ['Sonia Batista Ferreira'] },
   {
     alunos: ['Felipe Cafaro de Faria'],
-    convidados: ['Gabriela Cafaro', 'Valter Lopes', 'Mayara Cafaro', 'Caroline de Freitas', 'Marley Pereira', 'Henrique de Freitas'],
+    convidados: [
+      'Gabriela Cafaro', 'Valter Lopes', 'Mayara Cafaro', 'Caroline de Freitas', 'Marley Pereira', 'Henrique de Freitas',
+      'Carlos', 'Maria Rita', 'Tereza', 'Miguel',
+    ],
   },
   { alunos: ['Rafael da Silva Arruda'], convidados: ['Danielle Fabiana Bacelar Ramires Arruda'] },
   { alunos: ['Guilherme Pimenta Nantes'], convidados: ['Juliano da Silva Silveira', 'Fernanda Alves Cardoso', { nome: 'Higor Pimenta Nantes', obs: '4 anos' }] },
