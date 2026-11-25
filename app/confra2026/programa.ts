@@ -33,7 +33,7 @@ export const programa: Bloco[] = [
       { faixa: 1, alunos: ['Maria Eduarda Silva'], musicas: [{ titulo: 'Improviso sobre Fá# / Peça a 4 mãos' }] },
       { faixa: 2, alunos: ['Paula Moura Cacho'], musicas: [{ titulo: 'Mercado Persa', artista: 'Bastien' }] },
       { faixa: 3, alunos: ['Lara Morato Rodrigues'], musicas: [{ titulo: 'Medley Oh! Alice e Polícias e Ladrões', artista: 'Bastien' }] },
-      { faixa: 4, alunos: ['Eloise de Almeida Santos'], musicas: [{ titulo: 'Tema da Família Addams', artista: 'Vic Mizzy' }] },
+      { faixa: 4, alunos: ['Eloize de Almeida Santos'], musicas: [{ titulo: 'Tema da Família Addams', artista: 'Vic Mizzy' }] },
       { faixa: 5, alunos: ['Helena Gondim dos Santos'], musicas: [{ titulo: 'Prelúdio em Lá Menor', artista: 'Bastien' }] },
       { faixa: 6, alunos: ['Lucas Yoshimitsu da Silva Ujiie'], musicas: [{ titulo: 'Tema de Pokémon', artista: 'John Siegler' }] },
       { faixa: 7, alunos: ['Camila Ferreira Garcia'], musicas: [{ titulo: 'Je Te Laisserai des Mots', artista: 'Patrick Watson' }] },
