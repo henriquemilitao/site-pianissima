@@ -72,7 +72,7 @@ export const programa: Bloco[] = [
     apresentacoes: [
       { faixa: 21, alunos: ['Helena Gomes Borges'], musicas: [{ titulo: 'Aleluia', artista: 'Leonard Cohen' }] },
       { faixa: 22, alunos: ['Luísa Salles de Oliveira'], musicas: [{ titulo: 'Ele Vai Agir', artista: 'Sullivan Dutra (Adoradores)' }] },
-      { faixa: 23, alunos: ['Isabella Pescara'], musicas: [{ titulo: "Bella's Lullaby", artista: 'Carter Burwell' }] },
+      { faixa: 23, alunos: ['Isabella Carolina Oliveira Pescara'], musicas: [{ titulo: "Bella's Lullaby", artista: 'Carter Burwell' }] },
       { faixa: 24, alunos: ['Karlla de Almeida Dias Pereira'], musicas: [{ titulo: 'Ballade pour Adeline', artista: 'Paul de Senneville' }] },
       { faixa: 25, alunos: ['Letícia Gomes Borges'], musicas: [{ titulo: 'Golfinho Azul', artista: 'Stephen Schlacks' }] },
       { faixa: 26, alunos: ['Ágatha Malfer dos Santos'], musicas: [{ titulo: 'The Amazing Digital Circus', artista: 'Gooseworx' }] },
@@ -84,7 +84,7 @@ export const programa: Bloco[] = [
     apresentacoes: [
       { faixa: 28, alunos: ['Laura Araújo Damasceno de Almeida'], musicas: [{ titulo: 'Menino da Porteira', artista: 'Sérgio Reis' }],
         acompanhamento: [{ instrumento: 'Violão', nome: 'Rafael' }, { instrumento: 'Bateria', nome: 'Thiago' }, { instrumento: 'Baixo', nome: 'Henrique' }] },
-      { faixa: 29, alunos: ['Sara Zamboni'], musicas: [{ titulo: 'The Winner Takes It All', artista: 'ABBA' }],
+      { faixa: 29, alunos: ['Sara Zamboni de Carvalho'], musicas: [{ titulo: 'The Winner Takes It All', artista: 'ABBA' }],
         acompanhamento: [{ instrumento: 'Bateria', nome: 'Renan' }, { instrumento: 'Baixo', nome: 'Thiago' }, { instrumento: 'Violão', nome: 'Henrique' }] },
     ],
   },
