@@ -6,5 +6,5 @@
 export const PIX = {
   qr: '/pix-avulso.svg',
   chave: '(67) 98104-7995', // celular
-  valorAvulso: 100, // R$ por pessoa
+  valorAvulso: 70, // R$ por pessoa
 }
