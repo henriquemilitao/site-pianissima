@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import Link from 'next/link'
 import {
   ArrowUpRight,
   MapPin,
@@ -7,6 +8,7 @@ import {
 } from 'lucide-react'
 import { GalleryCarousel, PhotoCarousel, heroPhotos } from '@/components/photo-carousel'
 import { VideoShowcase } from '@/components/video-showcase'
+import { EventBanner } from '@/components/event-banner'
 
 const logoUrl = '/logopianissima.jpg'
 const whatsappUrl = 'https://wa.me/5567981047995?text=Ol%C3%A1%2C%20gostaria%20de%20saber%20mais%20sobre%20as%20aulas%20da%20Pian%C3%ADssima.'
@@ -26,6 +28,7 @@ const benefits = [
 export default function Page() {
   return (
     <main className="min-h-screen overflow-hidden bg-[#f6f2eb] text-[#292827]">
+      <EventBanner />
       <header className="relative z-10 mx-auto flex max-w-7xl items-center justify-between px-5 py-5 sm:px-8 lg:px-12">
         <a href="#inicio" className="flex items-center gap-3" aria-label="Pianíssima - início">
           <Image src={logoUrl} alt="Logo Pianíssima" width={52} height={52} className="h-12 w-12 rounded-full object-cover" priority />
@@ -35,6 +38,7 @@ export default function Page() {
           <a href="#sobre" className="transition-colors hover:text-[#b8863e]">Sobre</a>
           <a href="#aulas" className="transition-colors hover:text-[#b8863e]">Aulas</a>
           <a href="#contato" className="transition-colors hover:text-[#b8863e]">Contato</a>
+          <Link href="/confra2026" className="font-semibold text-[#b8863e] transition-colors hover:text-[#9f7332]">Recital 2026</Link>
         </nav>
         <a href={whatsappUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full bg-[#292827] px-4 py-2.5 text-xs font-semibold text-[#f8f4ed] transition-transform hover:-translate-y-0.5 sm:px-5 sm:text-sm">
           <MessageCircle className="h-4 w-4 text-[#d7a95e]" /> Fale conosco
